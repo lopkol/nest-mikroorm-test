@@ -5,6 +5,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { User } from './entities/user.entity';
 import mikroOrmConfig from './mikro-orm.config';
 import { MikroORM } from '@mikro-orm/core';
+import { Post } from './entities/post.entity';
 
 @Module({
   imports: [
@@ -12,7 +13,7 @@ import { MikroORM } from '@mikro-orm/core';
       // autoLoadEntities: true,
       ...mikroOrmConfig,
     }),
-    MikroOrmModule.forFeature([User]),
+    MikroOrmModule.forFeature([User, Post]),
   ],
   controllers: [AppController],
   providers: [AppService],

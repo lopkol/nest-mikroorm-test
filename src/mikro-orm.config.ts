@@ -1,5 +1,6 @@
 import { defineConfig, PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { User } from './entities/user.entity';
+import { Post } from './entities/post.entity';
 
 export default defineConfig({
   driver: PostgreSqlDriver,
@@ -12,7 +13,7 @@ export default defineConfig({
   // for now, we have to import entities manually to make CLI work...
   // solution: write our own CLI which can use the config we construct in the code
   // -> so we can use autoLoadEntities
-  entities: [User],
+  entities: [User, Post],
   migrations: {
     tableName: 'migrations_history',
   },

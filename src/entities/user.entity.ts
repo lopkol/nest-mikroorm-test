@@ -1,11 +1,14 @@
 import {
+  Collection,
   Entity,
   Index,
   JsonType,
+  OneToMany,
   PrimaryKey,
   Property,
   Unique,
 } from '@mikro-orm/core';
+import { Post } from './post.entity';
 
 @Entity()
 export class User {
@@ -41,4 +44,7 @@ export class User {
 
   @Property({ type: JsonType, nullable: true })
   metadata: Record<string, unknown>;
+
+  @OneToMany(() => Post, (post) => post.author)
+  posts = new Collection<Post>(this);
 }
