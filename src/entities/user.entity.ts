@@ -1,4 +1,11 @@
-import { Entity, Index, PrimaryKey, Property, Unique } from '@mikro-orm/core';
+import {
+  Entity,
+  Index,
+  JsonType,
+  PrimaryKey,
+  Property,
+  Unique,
+} from '@mikro-orm/core';
 
 @Entity()
 export class User {
@@ -25,4 +32,13 @@ export class User {
 
   @Property({ nullable: true })
   phone: string;
+
+  @Property()
+  createdAt: Date = new Date();
+
+  @Property({ onUpdate: () => new Date() })
+  updatedAt: Date = new Date();
+
+  @Property({ type: JsonType, nullable: true })
+  metadata: Record<string, unknown>;
 }
