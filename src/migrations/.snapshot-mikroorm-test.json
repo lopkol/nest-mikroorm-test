@@ -31,7 +31,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "mappedType": "string"
         },
         "lastname": {
@@ -40,7 +40,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "mappedType": "string"
         },
         "email": {
@@ -49,13 +49,41 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
+        "phone": {
+          "name": "phone",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
           "mappedType": "string"
         }
       },
       "name": "user",
       "schema": "public",
       "indexes": [
+        {
+          "columnNames": [
+            "uuid"
+          ],
+          "composite": false,
+          "keyName": "user_uuid_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "user_email_index",
+          "columnNames": [
+            "email"
+          ],
+          "composite": false,
+          "primary": false,
+          "unique": false,
+          "expression": "create index \"user_email_index\" on \"user\" (\"email\") where \"email\" is not null"
+        },
         {
           "keyName": "user_pkey",
           "columnNames": [

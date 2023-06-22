@@ -1,4 +1,4 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
+import { Entity, Index, PrimaryKey, Property, Unique } from '@mikro-orm/core';
 
 @Entity()
 export class User {
@@ -6,14 +6,23 @@ export class User {
   id: number;
 
   @Property({ type: 'uuid', defaultRaw: 'uuid_generate_v4()' })
+  @Unique()
   uuid: string;
 
-  @Property()
+  @Property({ nullable: true })
   firstname: string;
 
-  @Property()
+  @Property({ nullable: true })
   lastname: string;
 
-  @Property()
+  @Property({ nullable: true })
+  @Index({
+    name: 'user_email_index',
+    expression:
+      'create index "user_email_index" on "user" ("email") where "email" is not null',
+  })
   email: string;
+
+  @Property({ nullable: true })
+  phone: string;
 }
