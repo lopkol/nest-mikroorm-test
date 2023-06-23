@@ -4,6 +4,7 @@ import {
   EntityRepositoryType,
   Index,
   JsonType,
+  LoadStrategy,
   OneToMany,
   OneToOne,
   PrimaryKey,
@@ -55,9 +56,12 @@ export class User {
   @OneToOne(() => Address, {
     nullable: true,
     comment: 'The postal address of the user',
+    strategy: LoadStrategy.JOINED,
   })
   address: Address;
 
-  @OneToMany(() => Post, (post) => post.author)
+  @OneToMany(() => Post, (post) => post.author, {
+    strategy: LoadStrategy.JOINED,
+  })
   posts = new Collection<Post>(this);
 }

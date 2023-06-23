@@ -36,7 +36,6 @@ export class Post {
 
   @ManyToOne({
     entity: () => User,
-    strategy: LoadStrategy.JOINED,
     comment: 'The author of the post',
   })
   author: User;
