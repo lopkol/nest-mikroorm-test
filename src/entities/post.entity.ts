@@ -1,6 +1,7 @@
 import {
   Collection,
   Entity,
+  EntityRepositoryType,
   LoadStrategy,
   ManyToOne,
   OneToMany,
@@ -11,9 +12,12 @@ import {
 } from '@mikro-orm/core';
 import { User } from './user.entity';
 import { Comment } from './comment.entity';
+import { PostRepository } from '../repositories/post.repository';
 
-@Entity()
+@Entity({ customRepository: () => PostRepository })
 export class Post {
+  [EntityRepositoryType]?: PostRepository;
+
   @PrimaryKey()
   id: number;
 

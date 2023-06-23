@@ -8,6 +8,10 @@ import { User } from './entities/user.entity';
 import { Post } from './entities/post.entity';
 import { Comment } from './entities/comment.entity';
 import { Address } from './entities/address.entity';
+import { AddressRepository } from './repositories/address.repository';
+import { CommentRepository } from './repositories/comment.repository';
+import { PostRepository } from './repositories/post.repository';
+import { UserRepository } from './repositories/user.repository';
 
 @Module({
   imports: [
@@ -18,7 +22,13 @@ import { Address } from './entities/address.entity';
     MikroOrmModule.forFeature([User, Post, Comment, Address]),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    AddressRepository,
+    CommentRepository,
+    PostRepository,
+    UserRepository,
+  ],
 })
 export class AppModule implements OnModuleInit {
   constructor(private readonly orm: MikroORM) {}

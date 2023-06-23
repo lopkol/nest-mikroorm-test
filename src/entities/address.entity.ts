@@ -1,7 +1,15 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
+import {
+  Entity,
+  EntityRepositoryType,
+  PrimaryKey,
+  Property,
+} from '@mikro-orm/core';
+import { AddressRepository } from '../repositories/address.repository';
 
-@Entity()
+@Entity({ customRepository: () => AddressRepository })
 export class Address {
+  [EntityRepositoryType]?: AddressRepository;
+
   @PrimaryKey()
   id: number;
 

@@ -1,6 +1,7 @@
 import {
   Collection,
   Entity,
+  EntityRepositoryType,
   Index,
   JsonType,
   OneToMany,
@@ -11,9 +12,13 @@ import {
 } from '@mikro-orm/core';
 import { Post } from './post.entity';
 import { Address } from './address.entity';
+import { UserRepository } from '../repositories/user.repository';
 
-@Entity()
+@Entity({ customRepository: () => UserRepository })
 export class User {
+  // em.getRepository() will return correctly typed repo:
+  [EntityRepositoryType]?: UserRepository;
+
   @PrimaryKey()
   id: number;
 
