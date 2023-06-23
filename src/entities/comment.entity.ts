@@ -10,19 +10,16 @@ import {
   Unique,
 } from '@mikro-orm/core';
 import { User } from './user.entity';
-import { Comment } from './comment.entity';
+import { Post } from './post.entity';
 
 @Entity()
-export class Post {
+export class Comment {
   @PrimaryKey()
   id: number;
 
   @Property({ type: 'uuid', defaultRaw: 'uuid_generate_v4()' })
   @Unique()
   uuid: string;
-
-  @Property()
-  title: string;
 
   @Property({ type: TextType })
   content: string;
@@ -33,10 +30,23 @@ export class Post {
   @ManyToOne({
     entity: () => User,
     strategy: LoadStrategy.JOINED,
-    comment: 'The author of the post',
+    comment: 'The author of the comment',
   })
   author: User;
 
-  @OneToMany(() => Comment, (comment) => comment.post)
-  comments = new Collection<Comment>(this);
+  @ManyToOne({
+    entity: () => Post,
+    strategy: LoadStrategy.JOINED,
+    nullable: true,
+  })
+  post: Post;
+
+  @ManyToOne({
+    entity: () => Comment,
+    nullable: true,
+  })
+  parent: Comment;
+
+  @OneToMany(() => Comment, (comment) => comment.parent)
+  children = new Collection<Comment>(this);
 }

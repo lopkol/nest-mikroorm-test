@@ -2,10 +2,12 @@ import { Module, OnModuleInit } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { User } from './entities/user.entity';
 import mikroOrmConfig from './mikro-orm.config';
 import { MikroORM } from '@mikro-orm/core';
+import { User } from './entities/user.entity';
 import { Post } from './entities/post.entity';
+import { Comment } from './entities/comment.entity';
+import { Address } from './entities/address.entity';
 
 @Module({
   imports: [
@@ -13,7 +15,7 @@ import { Post } from './entities/post.entity';
       // autoLoadEntities: true,
       ...mikroOrmConfig,
     }),
-    MikroOrmModule.forFeature([User, Post]),
+    MikroOrmModule.forFeature([User, Post, Comment, Address]),
   ],
   controllers: [AppController],
   providers: [AppService],
