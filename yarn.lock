@@ -377,6 +377,11 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.43.0.tgz#559ca3d9ddbd6bf907ad524320a0d14b85586af0"
   integrity sha512-s2UHCoiXfxMvmfzqoN+vrQ84ahUSYde9qNO1MdxmoEhyHWsfmwOpFlwYV+ePJEVc7gFnATGUi376WowX1N7tFg==
 
+"@faker-js/faker@7.6.0":
+  version "7.6.0"
+  resolved "https://registry.yarnpkg.com/@faker-js/faker/-/faker-7.6.0.tgz#9ea331766084288634a9247fcd8b84f16ff4ba07"
+  integrity sha512-XK6BTq1NDMo9Xqw/YkYyGjSsg44fbNwYRx7QK2CuoQgyy+f1rrTDHoExVM5PsyXCtfl2vs2vVJ0MN0yN6LppRw==
+
 "@humanwhocodes/config-array@^0.11.10":
   version "0.11.10"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.11.10.tgz#5a3ffe32cc9306365fb3fd572596cd602d5e12d2"
@@ -732,6 +737,15 @@
   dependencies:
     "@mikro-orm/knex" "~5.7.12"
     pg "8.11.0"
+
+"@mikro-orm/seeder@^5.7.12":
+  version "5.7.12"
+  resolved "https://registry.yarnpkg.com/@mikro-orm/seeder/-/seeder-5.7.12.tgz#5cbc0c76a10056c44c707f3403b018c5ae2d21a8"
+  integrity sha512-LF6CsJ0wq6CZzeBDBOI2WsN7BA3Jxyr+w0Rj2TwoCeYgqI4gBacT8S4MOnsEsz3vQdmmNQC6qLx99HE0owF7dA==
+  dependencies:
+    "@faker-js/faker" "7.6.0"
+    fs-extra "11.1.1"
+    globby "11.1.0"
 
 "@nestjs/cli@^10.0.0":
   version "10.0.3"
