@@ -25,6 +25,6 @@ export class Address {
   @Property({ length: 1000 })
   line1: string;
 
-  @Property({ length: 1000 })
-  line2: string;
+  @Property({ length: 1000, nullable: true })
+  line2?: string;
 }
