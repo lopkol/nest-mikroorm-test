@@ -1,16 +1,34 @@
 import { AddressDto } from './address.dto';
 import { PostDto } from './post.dto';
 import { User } from '../entities/user.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class UserDto {
+  @ApiProperty()
   uuid: string;
+
+  @ApiProperty()
   firstname?: string;
+
+  @ApiProperty()
   lastname?: string;
+
+  @ApiProperty()
   email?: string;
+
+  @ApiProperty()
   phone?: string;
+
+  @ApiProperty()
   createdAt: Date;
+
+  @ApiProperty()
   updatedAt: Date;
+
+  @ApiProperty()
   address?: AddressDto;
+
+  @ApiProperty({ type: () => [PostDto] })
   posts?: PostDto[];
 
   public static createFromEntity(user: User): UserDto {
