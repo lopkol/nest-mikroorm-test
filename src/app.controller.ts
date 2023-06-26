@@ -14,6 +14,7 @@ import { UserRepository } from './repositories/user.repository';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { PostDto } from './dtos/post.dto';
 import { EntityManager } from '@mikro-orm/core';
+import { Comment } from './entities/comment.entity';
 
 @Controller()
 export class AppController {
@@ -58,7 +59,15 @@ export class AppController {
     const newPost = PostDto.createEntity(postDto);
     await user.posts.init();
     user.posts.add(newPost);
-    await this.userRepository.getEntityManager().flush();
+
+    // random other stuff to test transaction:
+    const newComment = new Comment();
+    newComment.author = user;
+    newComment.post = newPost;
+    newComment.content = 'test comment';
+    this.entityManager.persist(newComment);
+
+    await this.entityManager.flush();
 
     return PostDto.createFromEntityWithUser(newPost);
   }
