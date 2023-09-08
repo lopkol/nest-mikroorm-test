@@ -12,6 +12,8 @@ import { AddressRepository } from './repositories/address.repository';
 import { CommentRepository } from './repositories/comment.repository';
 import { PostRepository } from './repositories/post.repository';
 import { UserRepository } from './repositories/user.repository';
+import { PaymentConfig } from './entities/payment-config.entity';
+import { PaymentMethodConfig } from './entities/payment-method-config.entity';
 
 @Module({
   imports: [
@@ -19,7 +21,14 @@ import { UserRepository } from './repositories/user.repository';
       // autoLoadEntities: true,
       ...mikroOrmConfig,
     }),
-    MikroOrmModule.forFeature([User, Post, Comment, Address]),
+    MikroOrmModule.forFeature([
+      User,
+      Post,
+      Comment,
+      Address,
+      PaymentConfig,
+      PaymentMethodConfig,
+    ]),
   ],
   controllers: [AppController],
   providers: [
