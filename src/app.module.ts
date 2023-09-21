@@ -15,9 +15,8 @@ import { UserRepository } from './repositories/user.repository';
 import { PaymentConfig } from './entities/payment-config.entity';
 import { PaymentMethodConfig } from './entities/payment-method-config.entity';
 import { PaymentConfigRepository } from './repositories/payment-config.repository';
-import { MethodConfigRepository } from './repositories/method-config.repository';
-import { MethodConfig } from './entities/method-config.entity';
-import { Gateway } from './entities/gateway.entity';
+import { ProviderMethodConfigRepository } from './repositories/provider-method-config.repository';
+import { ProviderMethodConfig } from './entities/provider-method-config.entity';
 
 @Module({
   imports: [
@@ -32,8 +31,7 @@ import { Gateway } from './entities/gateway.entity';
       Address,
       PaymentConfig,
       PaymentMethodConfig,
-      MethodConfig,
-      Gateway,
+      ProviderMethodConfig,
     ]),
   ],
   controllers: [AppController],
@@ -44,7 +42,7 @@ import { Gateway } from './entities/gateway.entity';
     PostRepository,
     UserRepository,
     PaymentConfigRepository,
-    MethodConfigRepository,
+    ProviderMethodConfigRepository,
   ],
 })
 export class AppModule implements OnModuleInit {

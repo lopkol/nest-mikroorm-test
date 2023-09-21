@@ -6,8 +6,7 @@ import {
   Property,
 } from '@mikro-orm/core';
 import { PaymentConfig } from './payment-config.entity';
-import { MethodConfig } from './method-config.entity';
-import { Gateway } from './gateway.entity';
+import { ProviderMethodConfig } from './provider-method-config.entity';
 
 @Entity()
 export class PaymentMethodConfig {
@@ -15,17 +14,14 @@ export class PaymentMethodConfig {
   paymentConfig: PaymentConfig;
 
   @ManyToOne({
-    entity: () => MethodConfig,
+    entity: () => ProviderMethodConfig,
     referencedColumnNames: ['provider', 'method'],
     joinColumns: ['provider', 'method'],
     primary: true,
   })
-  methodConfig: MethodConfig;
+  providerMethodConfig: ProviderMethodConfig;
 
-  @ManyToOne(() => Gateway, { primary: true })
-  gateway: Gateway;
-
-  [PrimaryKeyType]?: [PaymentConfig, MethodConfig, Gateway];
+  [PrimaryKeyType]?: [PaymentConfig, ProviderMethodConfig];
 
   @Property({ type: JsonType, nullable: true })
   providerConfig?: Record<string, unknown>;

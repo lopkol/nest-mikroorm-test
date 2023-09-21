@@ -30,7 +30,6 @@ export class PaymentConfig {
   @OneToMany({
     entity: () => PaymentMethodConfig,
     mappedBy: 'paymentConfig',
-    orphanRemoval: true,
   })
   methods = new Collection<PaymentMethodConfig>(this, [], true);
 

@@ -6,8 +6,7 @@ import { Address } from './entities/address.entity';
 import { PaymentConfig } from './entities/payment-config.entity';
 import { PaymentMethodConfig } from './entities/payment-method-config.entity';
 import { LoadStrategy } from '@mikro-orm/core';
-import { MethodConfig } from './entities/method-config.entity';
-import { Gateway } from './entities/gateway.entity';
+import { ProviderMethodConfig } from './entities/provider-method-config.entity';
 
 export default defineConfig({
   driver: PostgreSqlDriver,
@@ -28,8 +27,7 @@ export default defineConfig({
     Address,
     PaymentConfig,
     PaymentMethodConfig,
-    MethodConfig,
-    Gateway,
+    ProviderMethodConfig,
   ],
   migrations: {
     tableName: 'migrations_history',

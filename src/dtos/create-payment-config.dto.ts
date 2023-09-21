@@ -32,9 +32,6 @@ export class CreatePaymentMethodConfigDto {
   @ApiProperty()
   method: string;
 
-  @ApiProperty()
-  gateway: string;
-
   @ApiProperty({ required: false })
   providerConfig?: Record<string, unknown>;
 }

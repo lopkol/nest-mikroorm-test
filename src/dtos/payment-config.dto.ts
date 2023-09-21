@@ -47,9 +47,6 @@ export class PaymentMethodConfigDto {
   method: string;
 
   @ApiProperty()
-  gateway: string;
-
-  @ApiProperty()
   providerMethodName: string;
 
   @ApiProperty()
@@ -62,12 +59,11 @@ export class PaymentMethodConfigDto {
     paymentMethodConfig: PaymentMethodConfig,
   ): PaymentMethodConfigDto {
     const dto = new PaymentMethodConfigDto();
-    dto.gateway = paymentMethodConfig.gateway.name;
-    dto.method = paymentMethodConfig.methodConfig.method;
-    dto.provider = paymentMethodConfig.methodConfig.provider;
+    dto.method = paymentMethodConfig.providerMethodConfig.method;
+    dto.provider = paymentMethodConfig.providerMethodConfig.provider;
     dto.providerMethodName =
-      paymentMethodConfig.methodConfig.providerMethodName;
-    dto.minAmount = paymentMethodConfig.methodConfig.minAmount;
+      paymentMethodConfig.providerMethodConfig.providerMethodName;
+    dto.minAmount = paymentMethodConfig.providerMethodConfig.minAmount;
 
     return dto;
   }

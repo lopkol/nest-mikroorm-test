@@ -6,12 +6,7 @@ export class PaymentConfigRepository extends EntityRepository<PaymentConfig> {
     return this.findOne(
       { ownerUuid, provider },
       {
-        populate: [
-          'methods',
-          'methods.gateway',
-          'methods.methodConfig',
-          'methods.methodConfig.supportedGateways',
-        ],
+        populate: ['methods', 'methods.providerMethodConfig'],
       },
     );
   }
