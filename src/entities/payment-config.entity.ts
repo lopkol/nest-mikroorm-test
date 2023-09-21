@@ -1,22 +1,28 @@
 import {
   Collection,
   Entity,
+  EntityRepositoryType,
   OneToMany,
   PrimaryKey,
-  PrimaryKeyType,
   Property,
+  Unique,
 } from '@mikro-orm/core';
 import { PaymentMethodConfig } from './payment-method-config.entity';
+import { PaymentConfigRepository } from '../repositories/payment-config.repository';
 
-@Entity()
+@Entity({ customRepository: () => PaymentConfigRepository })
+@Unique({ properties: ['ownerUuid', 'provider'] })
 export class PaymentConfig {
+  [EntityRepositoryType]?: PaymentConfigRepository;
+
   @PrimaryKey()
+  id: number;
+
+  @Property()
   ownerUuid: string;
 
-  @PrimaryKey()
+  @Property()
   provider: string;
-
-  [PrimaryKeyType]?: [string, string];
 
   @Property({ nullable: true })
   walletReference?: string;
@@ -26,7 +32,7 @@ export class PaymentConfig {
     mappedBy: 'paymentConfig',
     orphanRemoval: true,
   })
-  methodConfigs = new Collection<PaymentMethodConfig>(this, [], true);
+  methods = new Collection<PaymentMethodConfig>(this, [], true);
 
   // ...
 }

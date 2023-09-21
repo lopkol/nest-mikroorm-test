@@ -1,27 +1,34 @@
-import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
+import {
+  Entity,
+  JsonType,
+  ManyToOne,
+  PrimaryKeyType,
+  Property,
+} from '@mikro-orm/core';
 import { PaymentConfig } from './payment-config.entity';
+import { MethodConfig } from './method-config.entity';
+import { Gateway } from './gateway.entity';
 
 @Entity()
 export class PaymentMethodConfig {
-  @PrimaryKey()
-  id: number;
-
-  ownerUuid: string;
-
-  provider: string;
-
-  @ManyToOne({
-    entity: () => PaymentConfig,
-    referencedColumnNames: ['owner_uuid', 'provider'],
-    joinColumns: ['owner_uuid', 'provider'],
-  })
+  @ManyToOne(() => PaymentConfig, { primary: true })
   paymentConfig: PaymentConfig;
 
-  @Property()
-  method: string;
+  @ManyToOne({
+    entity: () => MethodConfig,
+    referencedColumnNames: ['provider', 'method'],
+    joinColumns: ['provider', 'method'],
+    primary: true,
+  })
+  methodConfig: MethodConfig;
 
-  @Property({ nullable: true })
-  network?: string;
+  @ManyToOne(() => Gateway, { primary: true })
+  gateway: Gateway;
+
+  [PrimaryKeyType]?: [PaymentConfig, MethodConfig, Gateway];
+
+  @Property({ type: JsonType, nullable: true })
+  providerConfig?: Record<string, unknown>;
 
   // ...
 }

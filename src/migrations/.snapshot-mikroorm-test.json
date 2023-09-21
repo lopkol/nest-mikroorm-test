@@ -84,6 +84,203 @@
     },
     {
       "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        }
+      },
+      "name": "gateway",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "name"
+          ],
+          "composite": false,
+          "keyName": "gateway_name_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "gateway_name_unique",
+          "columnNames": [
+            "name"
+          ],
+          "composite": false,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "gateway_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {}
+    },
+    {
+      "columns": {
+        "provider": {
+          "name": "provider",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "method": {
+          "name": "method",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "provider_method_name": {
+          "name": "provider_method_name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "min_amount": {
+          "name": "min_amount",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        }
+      },
+      "name": "method_config",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "method_config_pkey",
+          "columnNames": [
+            "provider",
+            "method"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {}
+    },
+    {
+      "columns": {
+        "method_config_provider": {
+          "name": "method_config_provider",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "method_config_method": {
+          "name": "method_config_method",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "gateway_id": {
+          "name": "gateway_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        }
+      },
+      "name": "method_config_supported_gateways",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "method_config_supported_gateways_pkey",
+          "columnNames": [
+            "method_config_provider",
+            "method_config_method",
+            "gateway_id"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "method_config_supported_gateways_method_config_pr_febe1_foreign": {
+          "constraintName": "method_config_supported_gateways_method_config_pr_febe1_foreign",
+          "columnNames": [
+            "method_config_provider",
+            "method_config_method"
+          ],
+          "localTableName": "public.method_config_supported_gateways",
+          "referencedColumnNames": [
+            "provider",
+            "method"
+          ],
+          "referencedTableName": "public.method_config",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        },
+        "method_config_supported_gateways_gateway_id_foreign": {
+          "constraintName": "method_config_supported_gateways_gateway_id_foreign",
+          "columnNames": [
+            "gateway_id"
+          ],
+          "localTableName": "public.method_config_supported_gateways",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.gateway",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "integer"
+        },
         "owner_uuid": {
           "name": "owner_uuid",
           "type": "varchar(255)",
@@ -116,12 +313,21 @@
       "schema": "public",
       "indexes": [
         {
-          "keyName": "payment_config_pkey",
+          "keyName": "payment_config_owner_uuid_provider_unique",
           "columnNames": [
             "owner_uuid",
             "provider"
           ],
           "composite": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "payment_config_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
           "primary": true,
           "unique": true
         }
@@ -131,23 +337,14 @@
     },
     {
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "unsigned": true,
-          "autoincrement": true,
-          "primary": true,
-          "nullable": false,
-          "mappedType": "integer"
-        },
-        "owner_uuid": {
-          "name": "owner_uuid",
-          "type": "varchar(255)",
+        "payment_config_id": {
+          "name": "payment_config_id",
+          "type": "int",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "integer"
         },
         "provider": {
           "name": "provider",
@@ -167,14 +364,23 @@
           "nullable": false,
           "mappedType": "string"
         },
-        "network": {
-          "name": "network",
-          "type": "varchar(255)",
+        "gateway_id": {
+          "name": "gateway_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "provider_config": {
+          "name": "provider_config",
+          "type": "jsonb",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "mappedType": "string"
+          "mappedType": "json"
         }
       },
       "name": "payment_method_config",
@@ -183,27 +389,54 @@
         {
           "keyName": "payment_method_config_pkey",
           "columnNames": [
-            "id"
+            "payment_config_id",
+            "provider",
+            "method",
+            "gateway_id"
           ],
-          "composite": false,
+          "composite": true,
           "primary": true,
           "unique": true
         }
       ],
       "checks": [],
       "foreignKeys": {
-        "payment_method_config_owner_uuid_provider_foreign": {
-          "constraintName": "payment_method_config_owner_uuid_provider_foreign",
+        "payment_method_config_payment_config_id_foreign": {
+          "constraintName": "payment_method_config_payment_config_id_foreign",
           "columnNames": [
-            "owner_uuid",
-            "provider"
+            "payment_config_id"
           ],
           "localTableName": "public.payment_method_config",
           "referencedColumnNames": [
-            "owner_uuid",
-            "provider"
+            "id"
           ],
           "referencedTableName": "public.payment_config",
+          "updateRule": "cascade"
+        },
+        "payment_method_config_provider_method_foreign": {
+          "constraintName": "payment_method_config_provider_method_foreign",
+          "columnNames": [
+            "provider",
+            "method"
+          ],
+          "localTableName": "public.payment_method_config",
+          "referencedColumnNames": [
+            "provider",
+            "method"
+          ],
+          "referencedTableName": "public.method_config",
+          "updateRule": "cascade"
+        },
+        "payment_method_config_gateway_id_foreign": {
+          "constraintName": "payment_method_config_gateway_id_foreign",
+          "columnNames": [
+            "gateway_id"
+          ],
+          "localTableName": "public.payment_method_config",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.gateway",
           "updateRule": "cascade"
         }
       }

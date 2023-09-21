@@ -6,6 +6,8 @@ import { Address } from './entities/address.entity';
 import { PaymentConfig } from './entities/payment-config.entity';
 import { PaymentMethodConfig } from './entities/payment-method-config.entity';
 import { LoadStrategy } from '@mikro-orm/core';
+import { MethodConfig } from './entities/method-config.entity';
+import { Gateway } from './entities/gateway.entity';
 
 export default defineConfig({
   driver: PostgreSqlDriver,
@@ -19,7 +21,16 @@ export default defineConfig({
   // for now, we have to import entities manually to make CLI work...
   // solution: write our own CLI which can use the config we construct in the code
   // -> so we can use autoLoadEntities
-  entities: [User, Post, Comment, Address, PaymentConfig, PaymentMethodConfig],
+  entities: [
+    User,
+    Post,
+    Comment,
+    Address,
+    PaymentConfig,
+    PaymentMethodConfig,
+    MethodConfig,
+    Gateway,
+  ],
   migrations: {
     tableName: 'migrations_history',
   },

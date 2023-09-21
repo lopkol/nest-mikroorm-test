@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   NotFoundException,
   Param,
@@ -22,6 +21,14 @@ import {
 } from './dtos/create-payment-config.dto';
 import { PaymentConfig } from './entities/payment-config.entity';
 import { PaymentMethodConfig } from './entities/payment-method-config.entity';
+import { MethodConfig } from './entities/method-config.entity';
+import {
+  UpdatePaymentConfigDto,
+  UpdatePaymentMethodConfigDto,
+} from './dtos/update-payment-config.dto';
+import { PaymentConfigRepository } from './repositories/payment-config.repository';
+import { MethodConfigRepository } from './repositories/method-config.repository';
+import { Gateway } from './entities/gateway.entity';
 
 @Controller()
 export class AppController {
@@ -29,6 +36,10 @@ export class AppController {
     private readonly entityManager: EntityManager,
     @InjectRepository(User)
     private readonly userRepository: UserRepository,
+    @InjectRepository(PaymentConfig)
+    private readonly paymentConfigRepository: PaymentConfigRepository,
+    @InjectRepository(MethodConfig)
+    private readonly methodConfigRepository: MethodConfigRepository,
     private readonly appService: AppService,
   ) {}
 
@@ -84,49 +95,98 @@ export class AppController {
   async createPaymentConfig(
     @Body() createPaymentConfigDto: CreatePaymentConfigDto,
   ): Promise<void> {
-    const paymentConfig = new PaymentConfig();
-    paymentConfig.ownerUuid = createPaymentConfigDto.ownerUuid;
-    paymentConfig.provider = createPaymentConfigDto.provider;
-    paymentConfig.walletReference = createPaymentConfigDto.walletReference;
+    const paymentConfig = createPaymentConfigDto.createEntity();
 
-    createPaymentConfigDto.methodConfigs.forEach(
-      (methodConfigDto: CreatePaymentMethodConfigDto) => {
-        const methodConfig = new PaymentMethodConfig();
-        methodConfig.method = methodConfigDto.method;
-        methodConfig.network = methodConfigDto.network;
+    await Promise.all(
+      createPaymentConfigDto.methods.map(
+        async (methodConfigDto: CreatePaymentMethodConfigDto) => {
+          const paymentMethodConfig = new PaymentMethodConfig();
+          paymentMethodConfig.providerConfig = methodConfigDto.providerConfig;
+          paymentMethodConfig.methodConfig =
+            this.entityManager.getReference<MethodConfig>(MethodConfig, [
+              createPaymentConfigDto.provider,
+              methodConfigDto.method,
+            ]);
+          const gateway = await this.entityManager.findOne<Gateway>(Gateway, {
+            name: methodConfigDto.gateway,
+          });
+          if (gateway) {
+            paymentMethodConfig.gateway = gateway;
+          }
 
-        paymentConfig.methodConfigs.add(methodConfig);
-        this.entityManager.persist(methodConfig);
-      },
+          paymentConfig.methods.add(paymentMethodConfig);
+          this.entityManager.persist(paymentMethodConfig);
+        },
+      ),
     );
     await this.entityManager.persistAndFlush(paymentConfig);
   }
 
-  @Delete('payment-config/:ownerUuid/:provider')
-  @ApiParam({ type: String, name: 'ownerUuid' })
-  @ApiParam({ type: String, name: 'provider' })
-  async deletePaymentConfig(
-    @Param('ownerUuid') ownerUuid: string,
+  @Post('payment-config/:owner/:provider')
+  @ApiParam({ name: 'provider', type: String })
+  @ApiParam({ name: 'owner', type: String })
+  @ApiBody({ type: UpdatePaymentConfigDto })
+  async updatePaymentConfig(
     @Param('provider') provider: string,
-  ): Promise<void> {
-    const paymentConfig = await this.entityManager.findOne(
-      PaymentConfig,
-      {
-        ownerUuid,
-        provider,
-      },
-      { populate: ['methodConfigs'] },
+    @Param('owner') owner: string,
+    @Body() updatePaymentConfigDto: UpdatePaymentConfigDto,
+  ) {
+    const methodConfigsForProvider =
+      await this.methodConfigRepository.findByProvider(provider);
+
+    const paymentConfig0 =
+      await this.paymentConfigRepository.findOneWithMethods(owner, provider);
+    if (paymentConfig0) {
+      paymentConfig0.walletReference = 'ABC';
+      await this.entityManager.flush();
+    }
+
+    const paymentConfig = await this.paymentConfigRepository.findOneWithMethods(
+      owner,
+      provider,
     );
 
-    if (paymentConfig) {
-      await paymentConfig.methodConfigs.init();
-      paymentConfig.methodConfigs
-        .getItems()
-        .forEach((methodConfig: PaymentMethodConfig) => {
-          this.entityManager.remove(methodConfig);
-        });
-
-      await this.entityManager.remove(paymentConfig).flush();
+    if (!paymentConfig) {
+      throw new NotFoundException();
     }
+
+    const paymentMethodConfigs = paymentConfig.methods.getItems();
+    for (const methodConfig of methodConfigsForProvider) {
+      for (const gateway of methodConfig.supportedGateways.getItems()) {
+        const existingPaymentMethodConfig = paymentMethodConfigs.find(
+          (pmc: PaymentMethodConfig) =>
+            pmc.methodConfig.method === methodConfig.method &&
+            pmc.methodConfig.provider === methodConfig.provider &&
+            pmc.gateway === gateway,
+        );
+        const updatePaymentMethodConfigDto =
+          updatePaymentConfigDto.methods.find(
+            (upmc: UpdatePaymentMethodConfigDto) =>
+              upmc.method === methodConfig.method &&
+              upmc.gateway === gateway.name,
+          );
+
+        if (updatePaymentMethodConfigDto) {
+          if (existingPaymentMethodConfig) {
+            // update existing payment method config
+            existingPaymentMethodConfig.providerConfig =
+              updatePaymentMethodConfigDto.providerConfig;
+            this.entityManager.persist(existingPaymentMethodConfig);
+          } else {
+            // create new payment method config
+            const paymentMethodConfig = new PaymentMethodConfig();
+            paymentMethodConfig.providerConfig =
+              updatePaymentMethodConfigDto.providerConfig;
+            paymentMethodConfig.methodConfig = methodConfig;
+            paymentMethodConfig.gateway = gateway;
+
+            paymentConfig.methods.add(paymentMethodConfig);
+            this.entityManager.persist(paymentMethodConfig);
+          }
+        }
+      }
+    }
+
+    await this.entityManager.flush();
   }
 }

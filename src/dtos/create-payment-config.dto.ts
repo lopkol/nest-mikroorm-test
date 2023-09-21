@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { PaymentMethodConfig } from '../entities/payment-method-config.entity';
 import { PaymentConfig } from '../entities/payment-config.entity';
 import { ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
@@ -17,7 +16,7 @@ export class CreatePaymentConfigDto {
   @ApiProperty({ type: () => [CreatePaymentMethodConfigDto] })
   @ValidateNested()
   @Type(() => CreatePaymentMethodConfigDto)
-  methodConfigs: CreatePaymentMethodConfigDto[];
+  methods: CreatePaymentMethodConfigDto[];
 
   public createEntity(): PaymentConfig {
     const paymentConfig = new PaymentConfig();
@@ -34,13 +33,8 @@ export class CreatePaymentMethodConfigDto {
   method: string;
 
   @ApiProperty()
-  network?: string;
+  gateway: string;
 
-  public createEntity(): PaymentMethodConfig {
-    const paymentMethodConfig = new PaymentMethodConfig();
-    paymentMethodConfig.method = this.method;
-    paymentMethodConfig.network = this.network;
-
-    return paymentMethodConfig;
-  }
+  @ApiProperty({ required: false })
+  providerConfig?: Record<string, unknown>;
 }

@@ -4,6 +4,9 @@ import { PaymentConfig } from '../entities/payment-config.entity';
 
 export class PaymentConfigDto {
   @ApiProperty()
+  id: number;
+
+  @ApiProperty()
   ownerUuid: string;
 
   @ApiProperty()
@@ -13,18 +16,19 @@ export class PaymentConfigDto {
   walletReference?: string;
 
   @ApiProperty({ type: () => [PaymentMethodConfigDto] })
-  methodConfigs: PaymentMethodConfigDto[];
+  methods: PaymentMethodConfigDto[];
 
   public static async createFromEntity(
     paymentConfig: PaymentConfig,
   ): Promise<PaymentConfigDto> {
     const dto = new PaymentConfigDto();
+    dto.id = paymentConfig.id;
     dto.ownerUuid = paymentConfig.ownerUuid;
     dto.provider = paymentConfig.provider;
     dto.walletReference = paymentConfig.walletReference;
 
-    const methodConfigEntities = await paymentConfig.methodConfigs.loadItems();
-    dto.methodConfigs = methodConfigEntities.map(
+    const methodConfigEntities = await paymentConfig.methods.loadItems();
+    dto.methods = methodConfigEntities.map(
       PaymentMethodConfigDto.createFromEntity,
     );
 
@@ -33,9 +37,6 @@ export class PaymentConfigDto {
 }
 
 export class PaymentMethodConfigDto {
-  @ApiProperty()
-  id: number;
-
   @ApiProperty()
   ownerUuid: string;
 
@@ -46,17 +47,27 @@ export class PaymentMethodConfigDto {
   method: string;
 
   @ApiProperty()
-  network?: string;
+  gateway: string;
+
+  @ApiProperty()
+  providerMethodName: string;
+
+  @ApiProperty()
+  minAmount?: number;
+
+  @ApiProperty({ required: false })
+  providerConfig?: Record<string, unknown>;
 
   public static createFromEntity(
     paymentMethodConfig: PaymentMethodConfig,
   ): PaymentMethodConfigDto {
     const dto = new PaymentMethodConfigDto();
-    dto.id = paymentMethodConfig.id;
-    // dto.ownerUuid = paymentMethodConfig.ownerUuid;
-    // dto.provider = paymentMethodConfig.provider;
-    dto.method = paymentMethodConfig.method;
-    dto.network = paymentMethodConfig.network;
+    dto.gateway = paymentMethodConfig.gateway.name;
+    dto.method = paymentMethodConfig.methodConfig.method;
+    dto.provider = paymentMethodConfig.methodConfig.provider;
+    dto.providerMethodName =
+      paymentMethodConfig.methodConfig.providerMethodName;
+    dto.minAmount = paymentMethodConfig.methodConfig.minAmount;
 
     return dto;
   }
