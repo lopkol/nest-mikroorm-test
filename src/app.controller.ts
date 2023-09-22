@@ -28,6 +28,7 @@ import {
 } from './dtos/update-payment-config.dto';
 import { PaymentConfigRepository } from './repositories/payment-config.repository';
 import { ProviderMethodConfigRepository } from './repositories/provider-method-config.repository';
+import { Parent } from './entities/parent.entity';
 
 @Controller()
 export class AppController {
@@ -177,5 +178,26 @@ export class AppController {
     // }
     //
     // await this.entityManager.flush();
+  }
+
+  @Post('parent/:id')
+  @ApiParam({ name: 'id', type: Number })
+  async updateParent(@Param('id') id: number) {
+    const parent = await this.entityManager.findOneOrFail(Parent, {
+      uniqueProp: 'aaa',
+    });
+
+    parent.data = 'ppppppppppp';
+    await this.entityManager.flush();
+
+    const sameParent = await this.entityManager.findOneOrFail(
+      Parent,
+      { uniqueProp: 'aaa' },
+      { populate: ['children', 'children.type'] },
+    );
+
+    sameParent.children.getItems()[0].data = 'eeeeeeeeeeee';
+    sameParent.children.getItems()[1].data = 'wwwwwwwwwwww';
+    await this.entityManager.flush();
   }
 }

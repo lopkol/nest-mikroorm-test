@@ -84,6 +84,192 @@
     },
     {
       "columns": {
+        "foo": {
+          "name": "foo",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "boo": {
+          "name": "boo",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "data": {
+          "name": "data",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        }
+      },
+      "name": "child_type",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "child_type_pkey",
+          "columnNames": [
+            "foo",
+            "boo"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "unique_prop": {
+          "name": "unique_prop",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "data": {
+          "name": "data",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        }
+      },
+      "name": "parent",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "unique_prop"
+          ],
+          "composite": false,
+          "keyName": "parent_unique_prop_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "parent_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {}
+    },
+    {
+      "columns": {
+        "parent_id": {
+          "name": "parent_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "type_foo": {
+          "name": "type_foo",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "type_boo": {
+          "name": "type_boo",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "data": {
+          "name": "data",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        }
+      },
+      "name": "child",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "child_pkey",
+          "columnNames": [
+            "parent_id",
+            "type_foo",
+            "type_boo"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "child_parent_id_foreign": {
+          "constraintName": "child_parent_id_foreign",
+          "columnNames": [
+            "parent_id"
+          ],
+          "localTableName": "public.child",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.parent",
+          "updateRule": "cascade"
+        },
+        "child_type_foo_type_boo_foreign": {
+          "constraintName": "child_type_foo_type_boo_foreign",
+          "columnNames": [
+            "type_foo",
+            "type_boo"
+          ],
+          "localTableName": "public.child",
+          "referencedColumnNames": [
+            "foo",
+            "boo"
+          ],
+          "referencedTableName": "public.child_type",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
         "id": {
           "name": "id",
           "type": "serial",

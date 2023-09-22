@@ -7,6 +7,9 @@ import { PaymentConfig } from './entities/payment-config.entity';
 import { PaymentMethodConfig } from './entities/payment-method-config.entity';
 import { LoadStrategy } from '@mikro-orm/core';
 import { ProviderMethodConfig } from './entities/provider-method-config.entity';
+import { Parent } from './entities/parent.entity';
+import { Child } from './entities/child.entity';
+import { ChildType } from './entities/child-type.entity';
 
 export default defineConfig({
   driver: PostgreSqlDriver,
@@ -28,6 +31,9 @@ export default defineConfig({
     PaymentConfig,
     PaymentMethodConfig,
     ProviderMethodConfig,
+    Parent,
+    Child,
+    ChildType,
   ],
   migrations: {
     tableName: 'migrations_history',

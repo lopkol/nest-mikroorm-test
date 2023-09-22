@@ -17,6 +17,9 @@ import { PaymentMethodConfig } from './entities/payment-method-config.entity';
 import { PaymentConfigRepository } from './repositories/payment-config.repository';
 import { ProviderMethodConfigRepository } from './repositories/provider-method-config.repository';
 import { ProviderMethodConfig } from './entities/provider-method-config.entity';
+import { Parent } from './entities/parent.entity';
+import { Child } from './entities/child.entity';
+import { ChildType } from './entities/child-type.entity';
 
 @Module({
   imports: [
@@ -32,6 +35,9 @@ import { ProviderMethodConfig } from './entities/provider-method-config.entity';
       PaymentConfig,
       PaymentMethodConfig,
       ProviderMethodConfig,
+      Parent,
+      Child,
+      ChildType,
     ]),
   ],
   controllers: [AppController],
